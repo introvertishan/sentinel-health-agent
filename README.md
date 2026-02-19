@@ -67,4 +67,7 @@ The system follows a distributed "Logic Node" architecture, separating data inge
     ```bash
    ollama pull llama3
    ollama pull mxbai-embed-large
+4. **Setup Database:**
+    ```bash
+   python init_db.py
    
