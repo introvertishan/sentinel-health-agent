@@ -6,9 +6,14 @@ from fastapi import FastAPI
 from kafka import KafkaConsumer
 from dotenv import load_dotenv
 from rag_service import rag_agent
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+from sqlalchemy.orm import sessionmaker
+from models import ClinicalAlert
 
 load_dotenv()
 
+engine = create_async_engine(os.getenv("DATABASE_URL"))
+AsyncSessionLocal = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -36,6 +41,21 @@ async def consume_vitals():
             # This calls our RAG service (Mock or Real)
             advice = await rag_agent.get_clinical_advice(hr)
             print(f"🚨 CRITICAL ALERT: HR {hr} | {advice}")
+
+            advice = await rag_agent.get_clinical_advice(hr)
+
+            # --- PERSISTENCE LOGIC ---
+            async with AsyncSessionLocal() as session:
+                async with session.begin():
+                    new_alert = ClinicalAlert(
+                        patient_id=data.get("patient_id"),
+                        heart_rate=hr,
+                        status="CRITICAL",
+                        ai_advice=advice
+                    )
+                    session.add(new_alert)
+
+            print(f"💾 Alert Saved to DB for HR: {hr}")
 
         await asyncio.sleep(0.01)
 
