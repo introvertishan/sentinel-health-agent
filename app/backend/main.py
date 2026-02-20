@@ -76,7 +76,6 @@ async def status():
 @app.get("/history", response_model=List[ClinicalAlertResponse])
 async def get_alert_history(limit: int = 10, patient_id: str = "PATIENT_001"):
     history_obj = AlertHistory(AsyncSessionLocal)
-    print("here1")
     return await history_obj.get_alert_history(limit, patient_id)
 
 if __name__ == "__main__":

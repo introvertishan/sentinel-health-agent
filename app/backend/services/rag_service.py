@@ -5,7 +5,6 @@ from langchain_community.embeddings import OllamaEmbeddings
 
 load_dotenv()
 
-# Toggle this based on whether you are at your laptop or PC
 MOCK_AI = os.getenv("MOCK_AI", "True").lower() == "true"
 OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL")
 
