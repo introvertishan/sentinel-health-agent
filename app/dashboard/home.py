@@ -42,7 +42,7 @@ while True:
 
             # Show the table of history
             st.subheader("Recent Alert History")
-            st.table(df[['timestamp', 'patient_id', 'heart_rate', 'status']])
+            st.table(df[['timestamp', 'patient_id', 'heart_rate', 'status' , 'ai_advice']])
         else:
             st.write("Searching for clinical alerts...")
 
